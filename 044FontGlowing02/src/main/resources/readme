@@ -1,0 +1,10 @@
+字体特效渲染
+
+注意查看几个字体的片段着色器
+
+smoothstep
+https://blog.csdn.net/libing_zeng/article/details/68924521
+对于 y = smoothstep(e0,e1,x);
+x<e0; y=0;
+x>e1; y=1;
+e0<=x<=e1; y =3*x*x-2*x*x*x

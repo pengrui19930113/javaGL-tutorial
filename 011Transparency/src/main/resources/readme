@@ -1,0 +1,6 @@
+透明效果
+
+注意fragmentShader 的 discard 表示丢弃片段的着色
+注释改行代码可以看到
+
+另外注意绘制透明对象的时候 需要取消背面剔除GL11.glDisable(GL11.GL_CULL_FACE);

@@ -1,0 +1,29 @@
+#version 330
+
+in vec3 position;
+in vec2 textureCoords;
+in vec3 normal;
+
+out vec2 pass_textureCoords;
+out vec3 surfaceNormal;
+out vec3 toLightVector[4];//array length same as Light.MAX_LIGHTS
+out vec3 toCameraVector;
+
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 transformationMatrix;
+uniform vec3 lightPosition[4];
+
+void main(void){
+
+	vec4 worldPosition = transformationMatrix*vec4(position.xyz,1.);
+	gl_Position = projectionMatrix*viewMatrix*worldPosition;
+	surfaceNormal = mat3(transpose(inverse(transformationMatrix)))*normal;
+	pass_textureCoords = textureCoords;
+	for(int i=0;i<4;i++){
+		toLightVector[i] = lightPosition[i] - worldPosition.xyz;
+	}
+	
+	vec4 cameraPosition = inverse(viewMatrix)*vec4(0,0,0,1); // to read readme
+	toCameraVector = cameraPosition.xyz - worldPosition.xyz;
+}

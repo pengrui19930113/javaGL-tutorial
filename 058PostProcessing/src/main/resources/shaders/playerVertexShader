@@ -1,0 +1,34 @@
+#version 330
+
+in vec3 position;
+in vec2 textureCoords;
+in vec3 normal;
+
+out vec2 pass_textureCoords;
+out vec3 surfaceNormal;
+out vec3 toLightVector;
+out vec3 toCameraVector;
+out float visibility;
+
+uniform mat4 projectionMatrix1;
+uniform mat4 viewMatrix1;
+uniform mat4 transformationMatrix1;
+uniform vec3 lightPosition1;
+
+const float density = 0.03; // fog varaible , that can be use uniform to modify value by main loop event;
+const float gradient = 1.5; // fog varaible
+
+void main(void){
+
+	vec4 worldPosition = transformationMatrix1*vec4(position.xyz,1.);
+	vec4 positionRelativeToCam = viewMatrix1*worldPosition; //fragment position of camera space 
+	gl_Position = projectionMatrix1*positionRelativeToCam;
+	
+	
+	surfaceNormal = mat3(transpose(inverse(transformationMatrix1)))*normal;
+	pass_textureCoords = textureCoords;
+	toLightVector = lightPosition1 - worldPosition.xyz;
+	
+	vec4 cameraPosition = inverse(viewMatrix1)*vec4(0,0,0,1);
+	toCameraVector = cameraPosition.xyz - worldPosition.xyz;
+}

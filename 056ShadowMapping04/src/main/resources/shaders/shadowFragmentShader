@@ -1,0 +1,16 @@
+#version 330
+
+in vec2 textureCoords;
+
+out vec4 fragmentOutput;
+
+uniform sampler2D modelTexture;
+
+void main(void){
+	//gl_FragDepth = gl_FragCoord.z;
+	float alpha = texture(modelTexture,textureCoords).a;
+	if(alpha <0.5){
+		discard;
+	}
+	fragmentOutput = vec4(1);
+}

@@ -1,0 +1,5 @@
+渲染环境立方体贴图
+由于所有的着色器中的 透视投影矩阵矩阵全部需要每一帧从主程序传递到着色程序，所以不改造工程了 直接将所有标准的透视投影的FOV 改为90 宽高比设置为 1：1
+
+关于CubeMap 中的 旋转角度还有待研究
+以及MatrixUtil.calculateViewMatrixBuffer(CubeMap cubeMap)

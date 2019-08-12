@@ -1,0 +1,15 @@
+字体渲染
+字体文件第一行 padding=3,3,3,3
+padding=上,左,下,右	的空白填充
+字体文件第二行scaleW=512
+
+char id=32   x=0     y=0     width=0     height=0     xoffset=0     yoffset=71    xadvance=27     page=0  chnl=0
+
+id:assic码
+x:字符左上角坐标在纹理左上角坐标的横向偏移
+y:字符左上角坐标在纹理左上角坐标的纵向偏移
+width:字符所占宽度
+height:字符所占高度
+xoffset:字符左上角相对于NDC参考点(基线和游标确定了一个位域窗口坐标系的一个基点)的	横向	偏移(向右为正)
+yoffset:字符左上角相对于NDC参考点(基线和游标确定了一个位域窗口坐标系的一个基点)的	纵向	偏移(向上为正)
+xadvance:开始游标是起始坐标，没个字符计算后游标需要偏移一个xadvance以得到绘制下一个字符的基点

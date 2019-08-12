@@ -1,0 +1,69 @@
+#version 150
+
+layout (points) in;
+layout (triangle_strip, max_vertices = 24) out;
+
+in vec3 pass_colour[];
+
+out vec3 finalColour;
+
+uniform mat4 projectionViewMatrix;
+
+const float size = 0.1;// cube size
+const vec3 lightDirection = normalize(vec3(-1,0,-1));
+
+void createVertex(vec3 offset,vec3 faceNormal){
+	vec4 actualOffset = vec4(offset*size,0.0);
+	vec4 worldPosition = gl_in[0].gl_Position + actualOffset;
+	gl_Position = projectionViewMatrix*worldPosition;
+	// probably should have done the lighting calculation once per face instead of once per vertex,but you get the idea;)
+	float brightness = max(dot(-lightDirection,faceNormal),0.3); 
+	finalColour = pass_colour[0] *brightness;
+	EmitVertex();
+}
+
+void main(void){
+
+	vec3 faceNormal = vec3(0,0,1);
+	createVertex(vec3(-1.0,1.0,1.0),faceNormal); 	// near face ,	left up corner
+	createVertex(vec3(-1.0,-1.0,1.0),faceNormal);	//				left down
+	createVertex(vec3(1.0,1.0,1.0),faceNormal);		//				right up
+	createVertex(vec3(1.0,-1.0,1.0),faceNormal);	//				right down
+	EndPrimitive();//near
+	
+	faceNormal = vec3(0,0,-1);
+	createVertex(vec3(1.0,1.0,-1.0),faceNormal);
+	createVertex(vec3(1.0,-1.0,-1.0),faceNormal);
+	createVertex(vec3(-1.0,1.0,-1.0),faceNormal);
+	createVertex(vec3(-1.0,-1.0,-1.0),faceNormal);
+	EndPrimitive();//far
+
+	faceNormal = vec3(-1,0,0);
+	createVertex(vec3(-1.0,1.0,-1.0),faceNormal);
+	createVertex(vec3(-1.0,-1.0,-1.0),faceNormal);
+	createVertex(vec3(-1.0,1.0,1.0),faceNormal);
+	createVertex(vec3(-1.0,-1.0,1.0),faceNormal);
+	EndPrimitive();//left
+
+	faceNormal = vec3(1,0,0);	
+	createVertex(vec3(1.0,1.0,1.0),faceNormal);
+	createVertex(vec3(1.0,-1.0,1.0),faceNormal);
+	createVertex(vec3(1.0,1.0,-1.0),faceNormal);
+	createVertex(vec3(1.0,-1.0,-1.0),faceNormal);
+	EndPrimitive();//right
+	
+	faceNormal = vec3(0,1,0);
+	createVertex(vec3(-1.0,1.0,-1.0),faceNormal);
+	createVertex(vec3(-1.0,1.0,1.0),faceNormal);
+	createVertex(vec3(1.0,1.0,-1.0),faceNormal);
+	createVertex(vec3(1.0,1.0,1.0),faceNormal);
+	EndPrimitive();//top
+	
+	faceNormal = vec3(0,-1,0);
+	createVertex(vec3(-1.0,-1.0,1.0),faceNormal);
+	createVertex(vec3(-1.0,-1.0,-1.0),faceNormal);
+	createVertex(vec3(1.0,-1.0,1.0),faceNormal);
+	createVertex(vec3(1.0,-1.0,-1.0),faceNormal);
+	EndPrimitive();//bottom
+}
+

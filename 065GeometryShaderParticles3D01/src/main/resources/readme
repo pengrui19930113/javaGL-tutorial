@@ -1,0 +1,29 @@
+3D 例子系统
+注意 例子着色器的光源位置是硬编码的 没有使用uniform 传递光源位置
+
+重点在 particle3dGeometryShader
+EmitVertex
+EndPrimitive
+
+
+几何着色器中的图元:
+point
+triangles
+lines
+lines_adjacency
+triangles_adjacency
+
+points
+line_strip
+triangles_strip
+
+eg.
+
+layout (points) in;
+layout (triangle_strip,max_vertices = 8) out;
+
+
+gs(geometry shader) key words
+gl_in[]
+EmitVertex()
+EndPrimitive()

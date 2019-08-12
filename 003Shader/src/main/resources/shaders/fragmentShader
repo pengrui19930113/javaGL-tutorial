@@ -1,0 +1,8 @@
+#version 330
+
+in vec3 colour;
+out vec4 fragmentOutColour;
+
+void main(void){
+	fragmentOutColour = vec4(colour,1.0);
+}

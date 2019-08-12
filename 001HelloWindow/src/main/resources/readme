@@ -1,0 +1,6 @@
+创建第一个窗口
+注意需要在启动参数配置
+ -Dorg.lwjgl.librarypath="${dynamicLibPath}"
+ 本例使用的是 -Dorg.lwjgl.librarypath="D:\.m2\repository\org\lwjgl\lwjgl\lwjgl-platform\2.9.3"
+ ${dynamicLibPath} 目录下包含4个动态库  windows下为 lwjgl.dll lwjgl64.dll OpenAL32.dll OpenAL64.dll
+ 本例子加载的是64位的动态库

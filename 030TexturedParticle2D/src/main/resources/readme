@@ -1,0 +1,7 @@
+纹理2D粒子系统
+
+注意当前MatrixUtil.calculateModelViewMatrixBuffer 中调用的获取的矩阵
+
+着色器中的  position.xy ∈ [-0.5,0.5]
++ vec2(0.5,0.5) 变换 到原点为图片左下角的坐标系统
+y = 1 - y 变换到原点在图片左上角的坐标系统

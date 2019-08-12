@@ -1,0 +1,4 @@
+使用opengl在窗口画2个三角形组成一个矩形
+
+本例使用了两种方式 : drawArrays 和 drawElements
+简单图形可以使用drawArrays ,顶点数据较多的模型使用drawElements 可以节约内存空间 所以大多数模型使用的是  顶点属性 +索引来构建模型

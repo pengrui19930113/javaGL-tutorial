@@ -1,0 +1,7 @@
+水5  dudv map
+dudv map 只是为了加入一些形变 让水面又波纹的效果 各种参数和算法可以 尝试，目的只是改变 形变的多少 具体可以修改 waterFragmentShader 的相关变量参数
+	vec2 distortion2 = texture(dudvMap,vec2(-textureCoords.x,textureCoords.y+moveFactor)).rg*2.0-1.0;// just more distortion
+	distortion2 *= waveStrength;
+为何采样 -textureCoords.x 可能只是为了随机而已 改变正负号感觉没什么影响
+
+纹理中只有  两个颜色通道  rg ∈[0,1]

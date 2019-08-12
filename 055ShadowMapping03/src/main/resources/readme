@@ -1,0 +1,32 @@
+阴影贴图
+阴影的平缓过度 和阴影间隙效果
+
+
+terrain的顶点着色器中计算阴影显示的因子
+const float shadowDistance = 30.0;
+const float transitionDistance = 5.0;
+
+float distance = length(positionRelativeToCam.xyz);//片段在相机空间距离
+distance = distance - (shadowDistance - transitionDistance);
+distance = distance / transitionDistance;
+shadowCoords.w = clamp(1.0-distance,0,1);
+
+具体的效果如下
+
+shadow factor
+^
+|
+|------------------\
+|					\
+|					 \
+|					  \-----------------
+|------------------------------------------> distance
+
+|---------------------|
+	shadowDistance				  
+				  |---|
+			transitionDistance
+			
+			
+-------------------------------------------------------------------------------------
+阴影间隙效果 需要判断 模型纹理中的坐标中是否有着色 如果着色颜色过小 则认为是间隙

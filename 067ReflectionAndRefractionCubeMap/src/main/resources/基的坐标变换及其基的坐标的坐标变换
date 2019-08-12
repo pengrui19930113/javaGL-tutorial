@@ -1,0 +1,69 @@
+res folder
+
+坐标的相对关系查看目录下的：基的坐标变换以及基所在的坐标的坐标变换示意图.png
+
+使用右手系
+已知两组基 源 目的 
+S = transpose(sx,sy,sz,ps)
+D = transpose(dr,dp,dq,pd)
+满足过度矩阵  Msd 使得
+ D = Msd x S
+
+ 则有 在 S上的坐标 Ps 对应 在D 上的坐标Pd 有如下关系
+ 
+ ***********************
+ ***********************
+ Pd = invert(transpose(Msd))x Ps
+ Ps = transpose(Msd)  x Pd
+ ***********************
+ ***********************
+ 
+Tds = transpose(Msd);
+Tsd = invert(Tsd)
+////////////////////////////////////// 
+ 验证例子如下
+ 		1	0	0	0			√2/2	0	-√2/2	0
+ S = 	0	1	0	0		D =	  0		1	  0		0
+ 		0	0	1	0			√2/2	0	√2/2	0
+ 		0	0	0	1			  1		0	  1		1
+基 S = transpose(sx,sy,sz,ps) 
+ sx =(1,0,0,0)
+ sy =(0,1,0,0)
+ sz =(0,0,1,0)
+ ps =(0,0,0,1) 注意在齐次坐标系中 ps 是基S的原点
+ 
+ 
+基D = transpose(dx,dy,dz,pd)
+ dr =(√2/2,0,-√2/2,0)
+ dp =(0,1,0,0)
+ dq =(√2/2,0,√2/2,0)
+ ds =(1,0,1,1)  ds 是基D的原点
+
+ 
+@1 在S坐标系中原点 在D坐标系的坐标为
+ Pd = invert(transpose(Msd)) x Ps
+ 
+ 		√2/2	0	-√2/2	0
+ Msd = 	  0		1	  0		0
+ 		√2/2	0	√2/2	0
+ 		  1		0	  1		1
+ 		  		
+ 		  		
+ 		  			√2/2	0	√2/2	1
+ transpose(Msd) =	  0		1	  0		0
+ 					-√2/2	0	√2/2	1
+ 					  0		0	  0		1
+ 					  
+ 
+ 							√2/2	0	-√2/2	 0
+ invert(transpose(Msd)) = 	  0		1	  0		 0
+ 							√2/2	0	√2/2	√2
+ 							  0		0	  0		1
+ 							  
+ 							  
+ 验证计算开始	invert(transpose(Msd)) x transpose(0,0,0,1) = transpose(0,0,-√2,1)
+ 
+@2 在D坐标系中原点 在S坐标系的坐标为
+	Ps = transpose(Msd) x Pd
+	transpose(Msd) x transpose(0,0,0,1) = transpose(1,0,1,1);
+	

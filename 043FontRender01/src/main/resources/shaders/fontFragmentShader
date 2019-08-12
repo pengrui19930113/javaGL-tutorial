@@ -1,0 +1,21 @@
+#version 330
+
+in vec2 pass_textureCoords;
+
+out vec4 fragmentOutputColour;
+
+uniform vec3 colour;
+uniform sampler2D fontAtlas;
+
+void main(void){
+	float alpha = texture(fontAtlas,pass_textureCoords).a;
+	/*
+	if(alpha>0){
+		fragmentOutputColour = vec4(colour,alpha);
+	}else{
+		fragmentOutputColour = vec4(1,0,0,1);
+	}
+	*/
+	//fragmentOutputColour = vec4(1,0,0,1);
+	fragmentOutputColour = vec4(colour,alpha);
+}

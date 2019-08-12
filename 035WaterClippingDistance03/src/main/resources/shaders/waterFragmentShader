@@ -1,0 +1,9 @@
+#version 330
+
+in vec3 textureCoords;
+
+out vec4 outputColor;
+
+void main(void){
+	outputColor = vec4(0,0,1,1);
+}

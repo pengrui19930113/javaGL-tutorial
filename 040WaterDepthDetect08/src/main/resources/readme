@@ -1,0 +1,24 @@
+水8 水的深度探测
+
+由于使用了帧缓冲对象的深度贴图 所以 分为两部分 ，该程序运行可以直接看到水底的深度
+基本思想是将片元(水面)与水底片元的深度进行相减得到水的深度来进行边缘检测 
+片断着色器中的gl_FragCoord 表示该片元在屏幕坐标的位置 
+gl_FragCoord.z 则表示该片元在相机坐标系中的深度 
+在相机坐标系中， 深度和距离 <近裁剪面距离的倒数> 是线性关系
+也就是  Depth = K (1/Z) ; K为常数， Z为距离近裁剪面的距离 			005Uniform.readme 可以查看透视投影变换的推导
+ 通过深度值求floorDistance 
+是需要深入了解透视投影矩阵的 。这个后续研究
+
+gl_FragCoord.z ∈  [0,1]
+
+先假设 gl_FragCoord.z ∈   [-1,1]
+gl_FragCoord.z = -a -b/z
+a = -(F+N)/(F-N)
+b = -2F*N /(F-N)
+
+z = b/(-a - gl_FragCoord.z)
+  = (2F*N/(F-N))/(gl_FragCoord.z - (F+N)/(F-N))
+  = 2F*N/((F+N)- gl_FragCoord.z*(F-N))
+  
+  注意此时的 gl_FragCoord.z ∈ [0,1]
+着色器中 2.0*depth-1.0 的作用就是将[0,1]映射到   [-1,1]

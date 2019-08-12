@@ -1,0 +1,25 @@
+P1点在切线空间(UVW)中的坐标为(u1,v1,0) 在世界空间(XYZ)中的坐标为(x1,y1,z1)
+P2点在切线空间(UVW)中的坐标为(u2,v2,0) 在世界空间(XYZ)中的坐标为(x2,y2,z2)
+P3点在切线空间(UVW)中的坐标为(u3,v3,0) 在世界空间(XYZ)中的坐标为(x3,y3,z4)
+					1  0  0  0							tx	ty	tz	0	正切线与U同向tangent(tx,ty,tz)
+worldBaseMatrix =	0  1  0  0	tangentBaseMatrix =		bx	by	bz	0	副切线与V同向bitangent(bx,by,bz)
+(世界空间的基矩阵)	0  0  1  0	(切线空间的基矩阵)	    nx	ny	nz	0	法线永远指向相机normal(nx,ny,nz)
+					0  0  0  1							0	0	0	1	tangent,bitangent,normal模为1且正交
+worldBaseMatrix*((x2,y2,z2,1)-(x1,y1,z1,1)) = tangentBaseMatrix*((u2,v2,0,1)-(u1,v1,0,1))
+worldBaseMatrix*((x3,y3,z3,1)-(x1,y1,z1,1)) = tangentBaseMatrix*((u3,v3,0,1)-(u1,v1,0,1))
+
+1	0	0	0		(x2-x1)		tx	ty	tz	0		(u2-u1)		x2-x1 = tx*(u2-u1)+ty*(v2-v1)	@1
+0	1	0	0	\/	(y2-y1)	——	bx	by	bz	0	\/	(v2-v1)	——\	y2-y1 = bx*(u2-u1)+by*(v2-v1)	@2
+0	0	1	0	/\	(z2-z1)	——	nx	ny	nz	0	/\	   0	——/ z2-z1 = nx*(u2-u1)+ny*(v2-v1)	@3
+0	0	0	1		   0		0	0	0	1		   0		  0   =   0
+
+1	0	0	0		(x3-x1)		tx	ty	tz	0		(u2-u1)		x3-x1 = tx*(u2-u1)+ty*(v2-v1)	@4
+0	1	0	0	\/	(y3-y1)	——	bx	by	bz	0	\/	(v2-v1)	——\	y3-y1 = bx*(u2-u1)+by*(v2-v1)	@5
+0	0	1	0	/\	(z3-z1)	——	nx	ny	nz	0	/\	   0	——/ z3-z1 = nx*(u2-u1)+ny*(v2-v1)	@6
+0	0	0	1		   0		0	0	0	1		   0		  0   =   0
+
+根据右手法则 (tx,ty,tz) x (bx,by,bz) = (nx,ny,nz) =((ty*bz-tz*by),(bx*tz-tx*bz),(tx*by-bx*ty))可得
+nx = ty*bz-tz*by @7 
+ny = bx*tz-tx*bz @8
+nz = tx*by-bx*ty @9
+@1-@9 9个方程可求解9个未知数

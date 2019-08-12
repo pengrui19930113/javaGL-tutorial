@@ -1,0 +1,7 @@
+光晕效果
+本质是将场景渲染到fbo1 中 然后将 fbo1中的纹理进行处理渲染到fbo2
+最后将 fbo1 和fbo2的纹理 进行相加
+
+brightFilterFragmentShader 着色器中
+float brightness = (colour.r*0.2126)+(colour.g*0.7152)+(colour.b*0.0722);
+是一个实验数据 测试则个数据显示的效果比较好

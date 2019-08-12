@@ -1,0 +1,13 @@
+水9 平滑水的边缘
+
+水面边缘有闪光应该是因为水的dudvMap形变造成的
+
+注意waterFragmentShader 最后  	
+outputColor.a = clamp(waterDepth/5,0.0,1.0); 
+需要在渲染水的过程中使用
+GL11.glEnable(GL11.GL_BLEND);
+GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+注意 DrawManager中 绘制 折射纹理的时候 将裁剪平面的 w 做了一点点偏移
+可以查看 两张图片对比下有无偏移的效果
+至于为什么加一点偏移就能消除呢？

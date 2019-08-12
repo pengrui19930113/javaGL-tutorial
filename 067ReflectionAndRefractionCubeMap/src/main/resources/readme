@@ -1,0 +1,8 @@
+玻璃的反射和折射效果
+
+注意着色器中 reflectionEntityVertexShader
+refractedVector = refract(viewVector,unitNormal,1.0/1.1);
+参考
+https://zhuanlan.zhihu.com/p/65105474
+
+

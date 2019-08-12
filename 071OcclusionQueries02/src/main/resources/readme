@@ -1,0 +1,7 @@
+遮挡 GPU查询
+
+http://developer.download.nvidia.com/books/HTML/gpugems/gpugems_ch29.html
+
+修改了flareVertexShader 	
+gl_Position = vec4(screenPosition, 0, 1.0);为
+gl_Position = vec4(screenPosition, 0.999, 1.0);

@@ -1,0 +1,17 @@
+#version 400 core
+
+in vec2 textureCoords;
+
+uniform sampler2D guiSampler;
+
+out vec4 color;
+
+void main(void){
+	vec4 c = texture(guiSampler,textureCoords);
+// transparent use the :
+//GL11.glEnable(GL11.GL_BLEND); 
+//GL11.glBlendFunc(GL11.GL_SRC_ALPHA,GL11.GL_ONE_MINUS_SRC_ALPHA);
+//GL11.glDisable(GL11.GL_DEPTH_TEST);
+//	if(c.a<.5){ discard; } 
+	color = c;
+}

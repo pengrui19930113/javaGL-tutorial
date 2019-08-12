@@ -1,0 +1,70 @@
+#version 330
+
+in vec2 pass_textureCoords;
+in vec3 surfaceNormal;
+in vec3 toLightVector;
+in vec3 toCameraVector;
+in vec4 shadowCoords;
+
+out vec4 fragmentOutColour;
+
+uniform vec3 lightColour;
+uniform sampler2D backgroundTexture;
+uniform sampler2D rTexture;
+uniform sampler2D gTexture;
+uniform sampler2D bTexture;
+uniform sampler2D blendMap;
+uniform sampler2D shadowMap;
+
+const int pcfCount = 2;
+const float totalTexels = (2.0*pcfCount +1.0)*(2.0*pcfCount +1.0);
+
+void main(void){
+
+	float mapSize = 1024;//maybe see CommonConstant.SHADOW_MAP_SIZE
+	float texelSize = 1.0/mapSize;
+	float total = 0.0;
+	for(int x=-pcfCount;x<=pcfCount;x++){
+		for(int y=-pcfCount;y<=pcfCount;y++){
+			float objectNearestLight = texture(shadowMap,shadowCoords.xy+vec2(x,y)*texelSize).r;
+			if(shadowCoords.z>objectNearestLight
+//					+0.002 //bias
+			){
+				total +=1.0;
+			}
+		}
+	}
+
+	total /= totalTexels;
+	float lightFactor = 1.0-(total*shadowCoords.w);
+/*
+	if(shadowCoords.z > objectNearestLight){
+		lightFactor = 1.0-(0.6*shadowCoords.w);
+	}
+*/
+	vec4 blendMapColour = texture(blendMap,pass_textureCoords);
+	float backTextureAmount = max(0,1 - (blendMapColour.r+blendMapColour.g+blendMapColour.b));
+	vec2 tiledCoords = pass_textureCoords*10.0; // magnification to get the detailed info
+	vec4 backgroundTextureColour = texture(backgroundTexture,tiledCoords)*backTextureAmount;
+	vec4 rTextureColour = texture(rTexture,tiledCoords)*blendMapColour.r;
+	vec4 gTextureColour = texture(gTexture,tiledCoords)*blendMapColour.g;
+	vec4 bTextureColour = texture(bTexture,tiledCoords)*blendMapColour.b;
+	
+	vec4 totalColour = 
+		backgroundTextureColour 
+		+ rTextureColour
+		+ gTextureColour
+		+ bTextureColour
+		;
+		
+	vec3 unitNormal = normalize(surfaceNormal);
+	vec3 unitLightVector = normalize(toLightVector);
+	float nDotl = dot(unitNormal,unitLightVector);
+	float brightness = max(nDotl,0.2);// 0.2 ambient
+	brightness = 1;//for test
+	vec3 diffuse = brightness*lightColour;
+	
+	vec4 textureColour = totalColour;// if you want , you can add specular light
+	fragmentOutColour = textureColour*vec4(diffuse*lightFactor,1.0);
+	//fragmentOutColour = texture(backgroundTexture,pass_textureCoords);//test texture
+}

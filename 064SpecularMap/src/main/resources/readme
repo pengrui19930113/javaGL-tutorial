@@ -1,0 +1,4 @@
+specularMap 高光贴图
+在entity 的着色器上实现了
+
+具体看着色器和 entity.setSpecularMap

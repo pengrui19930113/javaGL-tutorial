@@ -1,0 +1,42 @@
+#version 330
+
+in vec2 pass_textureCoords;
+in vec3 surfaceNormal;
+in vec3 toLightVector;
+in vec3 toCameraVector;
+in float visibility;
+
+out vec4 fragmentOutColour;
+out vec4 fragmentOutColour2;
+
+uniform sampler2D texSampler1;
+uniform vec3 lightColour1;
+uniform float shineDamper1;
+uniform float reflectivity1;
+
+void main(void){
+	vec3 unitNormal = normalize(surfaceNormal);
+	vec3 unitLightVector = normalize(toLightVector);
+	float nDotl = dot(unitNormal,unitLightVector);
+	float brightness = max(nDotl,0.0);
+	vec3 diffuse = brightness * lightColour1;
+	
+	vec3 unitToCameraVector = normalize(toCameraVector);
+	vec3 lightDirection = - unitLightVector; // light to fragment
+	vec3 reflectedLightDirection = reflect(lightDirection,unitNormal);
+	
+	float specularFactor = dot(reflectedLightDirection,unitToCameraVector);
+	specularFactor = max(specularFactor,0);
+	float dampedFactor = pow(specularFactor,shineDamper1);
+	vec3 finalSpecular = dampedFactor * (reflectivity1*lightColour1);
+	
+	vec4 textureColour = texture(texSampler1,pass_textureCoords);
+	if(textureColour.a<0.5){
+		discard;
+	}
+	fragmentOutColour = textureColour*vec4(diffuse,1.0)
+		+ vec4(finalSpecular,1.0)
+		;
+		
+	fragmentOutColour2 = textureColour+vec4(diffuse,1.0);
+}

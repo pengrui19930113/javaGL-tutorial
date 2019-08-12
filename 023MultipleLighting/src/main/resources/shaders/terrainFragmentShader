@@ -1,0 +1,45 @@
+#version 330
+
+in vec2 pass_textureCoords;
+in vec3 surfaceNormal;
+in vec3 toLightVector[4];
+in vec3 toCameraVector;
+
+out vec4 fragmentOutColour;
+
+uniform vec3 lightColour[4]; //array length same as Light.MAX_LIGHTS
+uniform sampler2D backgroundTexture;
+uniform sampler2D rTexture;
+uniform sampler2D gTexture;
+uniform sampler2D bTexture;
+uniform sampler2D blendMap;
+
+void main(void){
+	vec4 blendMapColour = texture(blendMap,pass_textureCoords);
+	float backTextureAmount = max(0,1 - (blendMapColour.r+blendMapColour.g+blendMapColour.b));
+	vec2 tiledCoords = pass_textureCoords*10.0; // magnification to get the detailed info
+	vec4 backgroundTextureColour = texture(backgroundTexture,tiledCoords)*backTextureAmount;
+	vec4 rTextureColour = texture(rTexture,tiledCoords)*blendMapColour.r;
+	vec4 gTextureColour = texture(gTexture,tiledCoords)*blendMapColour.g;
+	vec4 bTextureColour = texture(bTexture,tiledCoords)*blendMapColour.b;
+	
+	vec4 totalColour = 
+		backgroundTextureColour 
+		+ rTextureColour
+		+ gTextureColour
+		+ bTextureColour
+		;
+		
+	vec3 unitNormal = normalize(surfaceNormal);
+	vec3 totalDiffuse = vec3(0.0);
+	for(int i=0;i<4;i++){
+		vec3 unitLightVector = normalize(toLightVector[i]);
+		float nDotl = dot(unitNormal,unitLightVector);
+		float brightness = max(nDotl,0.2);
+		totalDiffuse += brightness*lightColour[i];
+	}
+	
+	vec4 textureColour = totalColour;// if you want , you can add specular light
+	fragmentOutColour = textureColour*vec4(totalDiffuse,1.0);
+	//fragmentOutColour = texture(backgroundTexture,pass_textureCoords);//test texture
+}

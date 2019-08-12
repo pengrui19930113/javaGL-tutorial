@@ -1,0 +1,11 @@
+水3 裁剪平面
+本例只做了地形的裁剪平面 其他 渲染对象没有使用裁剪平面
+
+// plane is  0*x +(-1*y)+0*z +(8) = 0  
+例如裁剪平面的四元参数(nx,ny,nz,D) 为(0,-1,0,8) 
+//clipping plane render the great than 0 the value .
+显卡将渲染平面方程大于0的片段 
+//e.g position origin( 0,0,0) value is 0*0+(-1*0)+0*0+8 = 8 >0 , so the fragment will be rendered
+例如在上述平面方程中 在世界坐标系中(0,0,0)的片段得出的值为8 所以将会被渲染        
+
+ 着色器中 gl_ClipDistance[i]中的任意一个 小于0 则图元会不会被绘制 i属于 [0,7]

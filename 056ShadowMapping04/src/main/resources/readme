@@ -1,0 +1,10 @@
+阴影贴图	阴影优化
+
+soft edge 柔软边缘
+
+使用到的技术 PCF(percentage closer filtering 百分比渐进过滤)
+
+terrain 片段着色器中的 偏移可以 消除斑纹
+
+
+当前阴影效果只在terrain 上实现了  如果 其他的物体需要实现阴影则需要 在相应的着色器上实现

@@ -1,0 +1,8 @@
+法线贴图 中英文教程
+https://learnopengl-cn.github.io/05%20Advanced%20Lighting/04%20Normal%20Mapping/
+https://learnopengl.com/Advanced-Lighting/Normal-Mapping
+
+重点需要理解贴图中的纹理是在切线空间
+工程目录下的图片也有相关推导
+
+为简单起见 着色器没有使用光的衰减

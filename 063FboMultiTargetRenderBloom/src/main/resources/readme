@@ -1,0 +1,5 @@
+使用multi attachment fbo 实现 光晕 
+目前只在 player 和entity 上实现 了多附件的颜色输出变量
+
+entity 中 使用的 是 opengl 3.3 版本才支持的 layout (location = attachmentIndex)
+player 中 使用的 是低版本 1.5 可支持的 使用 GL30.glBindFragDataLocation 来指定  片段输出location

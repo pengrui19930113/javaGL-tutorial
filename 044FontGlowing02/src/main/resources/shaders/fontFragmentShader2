@@ -1,0 +1,21 @@
+#version 330
+
+in vec2 pass_textureCoords;
+
+out vec4 fragmentOutputColour;
+
+uniform vec3 colour;
+uniform sampler2D fontAtlas;
+
+const float width = 0.5;
+//const float edge = 0.1;
+const float edge = 0.5; // test edge effect
+
+void main(void){
+	float distance = 1.0-texture(fontAtlas,pass_textureCoords).a; // distance ∈ [0,1]
+	float smoothDistance = smoothstep(width,width+edge,distance); 
+	// if distance = 0 smoothDistance = 0. we should get more close 0 , alpha more greater. so ,let us do it ---alpha = 1 - smoothDistance;
+	float alpha = 1.0 - smoothDistance;
+	fragmentOutputColour = vec4(colour,alpha);
+	//fragmentOutputColour = vec4(alpha,0,0,1);
+}

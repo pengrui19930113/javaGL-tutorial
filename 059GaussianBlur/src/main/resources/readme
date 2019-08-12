@@ -1,0 +1,7 @@
+高斯模糊
+将离屏渲染的2D 纹理进行卷积核处理
+
+高斯模糊可以分解为横向模糊加纵向模糊 以减少计算量 
+
+片段着色器的卷起权重选区
+http://dev.theomader.com/gaussian-kernel-calculator/

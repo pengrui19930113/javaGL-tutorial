@@ -1,0 +1,4 @@
+窗口的静态GUI
+
+通常场景绘制 GUI 的绘制是放在比较后面的
+注意一下 DrawManager.drawGuiEntity

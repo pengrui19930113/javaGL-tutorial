@@ -1,0 +1,10 @@
+#version 330
+
+in vec2 pass_textureCoords;
+out vec4 fragmentOutColour;
+
+uniform sampler2D texSampler;
+
+void main(void){
+	fragmentOutColour = texture(texSampler,pass_textureCoords);
+}

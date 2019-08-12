@@ -1,0 +1,4 @@
+2D粒子系统
+
+注意当前MatrixUtil.calculateModelViewMatrixBuffer 中调用的获取的矩阵
+

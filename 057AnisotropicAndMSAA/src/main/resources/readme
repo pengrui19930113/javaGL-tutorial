@@ -1,0 +1,10 @@
+anisotropic and MSAA（Multi-Sample Anti-Aliasing）
+各项异性：在纹理生成mipmap 的时候 生成的纹理不只是等比的 最终采样纹理根据贴图的视角而选择最合适的纹理
+主要代码在 TextureLoader.createTexture
+GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
+多重采样反锯齿:在光栅化阶段一个闭合区域的边缘通常会交于单个像素【正方形】 当正方形的重心在闭合区域内的时候，则这个像素被着色【被设置的颜色】
+	如果启用MSAA（例如采样个数为4） 则像素会被分为 2x2的小正方形 系统会根据4个小正方形的几何中心 是否在闭合区域内 如果有3个集合中心在闭合区域内 则 最终着色为（3/4 * 绘制颜色）
+另外MSAA可以通过FBO来实现	
+主要代码在MainGameLoop.initialize
+new PixelFormat().withSamples(8)
+GL11.glEnable(GL13.GL_MULTISAMPLE);

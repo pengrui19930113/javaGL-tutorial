@@ -1,0 +1,12 @@
+遮挡 GPU查询
+
+http://developer.download.nvidia.com/books/HTML/gpugems/gpugems_ch29.html
+
+修改了 DrawManager.java 
+flareManager.coverage = visibleSamples/11624f
+GL20.glUniform1f(flareManager.flareShader.location_brightness, flareManager.brightness*flareManager.coverage);
+等代码
+添加了
+GL11.glColorMask(false, false, false, false);
+GL11.glDepthMask(false);
+等代码

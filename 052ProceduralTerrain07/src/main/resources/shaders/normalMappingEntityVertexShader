@@ -1,0 +1,44 @@
+#version 330
+
+in vec3 position;
+in vec2 textureCoords;
+in vec3 normal;
+in vec3 tangent;
+
+out vec2 pass_textureCoords;
+out vec3 toLightVector;
+out vec3 toCameraVector;
+//out vec3 pass_tangent;just test
+
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 transformationMatrix;
+uniform vec3 lightPosition;
+
+void main(void){
+	//pass_tangent = tangent;
+	vec4 worldPosition = transformationMatrix*vec4(position.xyz,1.);
+	vec4 positionRelativeToCam = viewMatrix*worldPosition; //fragment position of camera space 
+	gl_Position = projectionMatrix*positionRelativeToCam;
+	
+	pass_textureCoords = textureCoords;
+	// model normal to world normal
+	vec3 norm = normalize(mat3(transpose(inverse(transformationMatrix)))*normal);
+	vec3 tang = normalize(tangent); 
+	vec3 bitang = cross(norm,tang);
+	
+	mat3 toTangentSpace = mat3(
+		tang.x,	 bitang.x, norm.x
+		,tang.y, bitang.y, norm.y
+		,tang.z, bitang.z, norm.z
+	);
+	// in world space
+	toLightVector = lightPosition - worldPosition.xyz;
+	// transform to tangent space
+	toLightVector = toTangentSpace*toLightVector;
+	
+	// in world space
+	toCameraVector = (inverse(viewMatrix)*vec4(0,0,0,1)).xyz - worldPosition.xyz;
+	// transform to tangent space
+	toCameraVector =  toTangentSpace*toCameraVector;
+}

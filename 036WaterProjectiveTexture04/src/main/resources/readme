@@ -1,0 +1,18 @@
+水4
+
+关于水的片段着色器
+	vec2 ndc = clipSpace.xy/clipSpace.w;
+	ndc = ndc/2.0+0.5;
+	vec2 refractTextureCoords = vec2(ndc.x,ndc.y);
+	vec2 reflectTextureCoords = vec2(ndc.x,1-ndc.y);
+	vec4 reflectColour = texture(reflectionTexture,reflectTextureCoords);
+	vec4 refractColour = texture(refractionTexture,refractTextureCoords);
+	outputColor = mix(reflectColour,refractColour,0.5);
+
+clipSpace 是片段 经过模型视图透视投影矩阵变换后 的 齐次裁剪空间
+clipSpace.xy/clipSpace.w 被称为透视除法 将齐次裁剪空间 变换到 标准设备空间/坐标 (Normalized Device Space/Coordination)
+ndc = ndc/2.0+0.5  为了使用纹理坐标，将标准设备空间 映射到 [0,1] 
+
+vec2 refractTextureCoords = vec2(ndc.x,ndc.y);
+vec2 reflectTextureCoords = vec2(ndc.x,1-ndc.y);	注意写成vec2(ndc.x,-ndc.y)效果也一样的
+由于折射纹理使用的相机与最终窗口显示的图像是同一个相机 所以refractTextureCoords 直接使用ndc.xy 但是反射纹理采样的纹理坐标 ndc.y需要坐标变换为 1-ndc.y；又由于纹理默认的环绕方式是平铺，所以使用-ndc.y 也可以采样到正确的像素

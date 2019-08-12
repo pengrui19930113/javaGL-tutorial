@@ -1,0 +1,83 @@
+使用了顶点做着色器和片段着色器对绘制的举行着色
+
+当前的着色规则跟坐标有关，没有任何意义，只是验证一下而已
+
+关于透视投影矩阵的推导：
+https://www.cnblogs.com/jingrui/p/9874194.html
+https://blog.csdn.net/popy007/article/details/1797121
+
+简而言之需要将世界坐标系的视椎体的坐标映射到 CVV(Canonical View Volume 标准观察体  x,y,z∈[-1,1])的坐标空间
+
+N:近裁剪平面到观察点的距离 F:远裁剪平面到观察点的距离	Mp:透视投影矩阵
+本例使用得投影平面为 N,Nx∈[left,right] ,Ny属于[bottom,top]
+任意一点坐标P0(x,y,z,1) --矩阵变换 及其相关处理--> (-N*x/z,-N*y/z,f(z),1)
+其中f(z) 只是为了记录深度值，方便与后续深度测试而记录 形式无所谓
+通过逻辑分析为了确定方便的矩阵 最终确定了变换及其相关处理过程如下：
+世界坐标 --透视投影变换--> P(N*x,N*y,a*z+b,-z) --透视除法--> P`(-N*x/z,-N*y/z,-(a*z+b)/z,1)
+确认 f(z) =  -(a*z+b)/z
+所以确认其次变换矩阵 M0为：
+N	0	0	0
+0	N	0	0
+0	0	a	b
+0	0	-1	0
+M0*transpose(P0) = transpose(P)/(-z) = P`
+
+@1 
+线性插值z坐标 -(a*z+b)/z = -a - b/z 求取 a b的值
+世界坐标系 [-N,-F] --插值--> [-1,1]
+-1 = (-a-b/(-N))
+1 = (-a-b/(-F))
+得： 	a = -(F+N)/(F-N)
+	b = -2F*N/(F-N)
+
+@2
+线性插值x坐标  -N*x/z
+世界坐标[left,right] --插值--> [-1,1]
+(-N*x/z - left)/(right-left) = (x-(-1))/(1-(-1))
+得：
+x` = [2N*x/(-z)]/[right-left]	-	(right+left)/(right-left)
+
+@3
+线性插值y坐标
+(-N*y/z - bottom)/(top-bottom) = (y-(-1))/(1-(-1))
+y` = [2N*y/(-z)]/[top-bottom]	-	(top+bottom)/(top-bottom)
+
+
+综上所述
+P` = transpose(	[2N*x/(-z)]/(right-left) - (right+left)/(right-left),	[2N*y/(-z)]/(top-bottom) - (top+bottom)/(top-bottom),	-(a*z+b)/z),	1)
+进行透视除法逆运算得到坐标
+P = transpose(2N*x/(right-left) + (right+left)*z/(right-left),	2N*y/(top-bottom) + (top+bottom)*z/(top-bottom),	a*z+b,	-z);
+
+Mp * transpose(x,y,z,1) = P`
+
+Mp:
+2N/(right-left)				0			(right+left)/(right-left)		0
+
+   		0			2N/(top-bottom)		(top+bottom)/(top-bottom)		0
+   		
+		0					0					-(F+N)/(F-N)		-2FN/(F-N)
+		
+		0					0						-1					0
+
+ 
+通常透视投影矩阵关于视觉空间得 x，z轴对称 所以 (right+left) = 0 ，(top+bottom) = 0
+2N/(right-left)				0						0					0
+
+   		0			2N/(top-bottom)					0					0
+   		
+		0					0					-(F+N)/(F-N)		-2FN/(F-N)
+		
+		0					0						-1					0
+		
+令观察top 和 bottom得视线得夹角为 fovy 则	2N/(top-bottom) = N/[(top-bottom)/2] = cot(fovy/2)
+令 aspect = (right-left)/(top-bottom) 则 2N/(right-left) = [2N/(top-bottom)] * (top-bottom)/(right-left) = [2N/(top-bottom)] * 1/aspect = cot(fovy/2)/aspect
+所以
+Mp:
+cot(fovy/2)/aspect			0						0					0
+
+   		0				cot(fovy/2)					0					0
+   		
+		0					0					-(F+N)/(F-N)		-2FN/(F-N)
+		
+		0					0						-1					0
+

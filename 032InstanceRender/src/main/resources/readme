@@ -1,0 +1,13 @@
+https://learnopengl-cn.github.io/04%20Advanced%20OpenGL/10%20Instancing/
+https://www.bilibili.com/video/av24808312
+实例渲染 本质是一次性将数据传给GPU 然后再绘制所有实例  而不是 CPU通知GPU一次 绘制一次， 可以大大降低CPU与GPU的通信次数
+glDrawArraysInstanced
+glVertexAttribPointer
+glVertexAttribDivisor //https://www.cnblogs.com/mengfanrong/p/5098114.html
+
+gl_InstanceID
+
+需要注意的地方：
+1.ParticleShader中的 glBindAttribLocation 注意只绑定了1,5,6 因为 1,2,3,4 都被矩阵占用了
+
+2.ParticleSystem中的addInstanceAttribute	注意顶点属性中的 attribute 最长是4个变量 也就是 vec4 但是 矩阵是16个变量，所以需要绑定4个attribute 来存储矩阵  location = 1,2,3,4 中分别存储的矩阵的4个列向量

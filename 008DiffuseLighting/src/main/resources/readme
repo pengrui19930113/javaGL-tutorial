@@ -1,0 +1,14 @@
+漫反射光照
+
+漫反光照强度 = max(dot(normalize(片段坐标指向光源坐标得向量),normalize(片段法向量)),0) * 片段在纹理上采样的颜色
+
+关于光照模型和发现变换  https://learnopengl-cn.github.io/02%20Lighting/02%20Basic%20Lighting/
+关于法线变换 https://blog.csdn.net/zsq306650083/article/details/50957206
+
+//为了法线向量在非等比缩放的情况下依旧垂直与表面 所以使用正规矩阵(Normal Matrix)
+//假设模型矩阵 M ，片段法向量 n ，片段平面任意一向量 t  ， . 为dot , S 为法向量的 变换矩阵， ^T 为矩阵的转置 ,` 为变化后的坐标 , ^-1 为矩阵的逆 ,E 单位矩阵
+// t` = Mt , n` = Sn 
+//推导过程 n.t = n^T t  = n`^T t` = 0 
+//(Sn)^TMt = 0  ; n^T S^T Mt = n^T t = 0
+//n^T S^T Mt = n^T t  左右等式 左乘(n^T)^-1 ,右乘 t^-1    --->          S^TM = E   ---》 S = (M^-1)^T  结论 即法向量的变化矩阵（normal matrix）为 模型矩阵的逆的转置
+//即在 glm中使用   transpose(inverse(model))inverse 为逆， transpose为转置

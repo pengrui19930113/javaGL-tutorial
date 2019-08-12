@@ -1,0 +1,21 @@
+单FBO 多附件输出 这样来创建光晕效果就不需要两次渲染 FBO而是一次性渲染到两个附件
+本例将效果作用到 player上 然后渲染到GUI上
+
+ 一个FBO 携带多个 颜色附件和深度附件
+在片段着色器的时候可以指定输出对应那一组附件
+例如：
+layout (location=0) out vec4 out_Color;
+layout (location=1) out vec4 out_BrightColor;
+
+或者 片段着色器如下
+out vec4 out_Color;
+out vec4 out_BrightColor;
+使用GL30.glBindFragDataLocation 指定输出对应的附件
+
+
+备注：
+很简单但是很严重的问题  MainGameLoop.initialize()
+当初始化上下文的时候	如果配置多重采样new PixelFormat().withSamples(8) 则使用GL30.glBlitFramebuffer 指定输出为屏幕的时候会报错	glGetError==1282 
+
+注意terrainFragmentShader 中添加了一行代码 fragmentOutColour.a = 1;
+否则绘制到FBO中的 alpha = 0 后续再 使用 glBlitFramebuffer 到纹理的时候会出现地图透明的效果 

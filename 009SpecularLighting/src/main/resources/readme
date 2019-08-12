@@ -1,0 +1,18 @@
+镜面光照
+算法1：
+镜面光照强度 = (光的颜色 * 反射比率) * pow(max( dot(normalize(反射光向量),normalize(片段指向相机得向量)) ,0), 反射聚光度);
+
+反射聚光度： shineDamper
+反射比率：reflectivity
+
+算法2：
+镜面光照强度 = (光的颜色 * 反射比率) * pow(max( dot(normalize(片段法向量),normalize(normalize(片段指向相机得向量 ) + normalize(片段指向光源的向量))) ,0), 反射聚光度);
+
+
+关于光照模型https://learnopengl-cn.github.io/02%20Lighting/02%20Basic%20Lighting/
+
+对于相机空间  也就是 模型视图空间 ， 照相机总是在 坐标系原点的， 所以要推算相机在世界坐标系的坐标的话 
+只需要 
+	原点坐标 
+		左乘
+	 一个视图矩阵的逆矩阵即可

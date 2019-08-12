@@ -1,0 +1,10 @@
+简单地形
+只是一个普通平面网格用了地形贴图而已
+
+构建平面的时候需要注意边缘条件，具体代码参考 VAO.createTerrainVao
+
+注意terrainVertexShader 中的代码 
+pass_textureCoords = textureCoords*4;
+
+由于构建地形网格的时候 纹理坐标 s,t ∈[0,1] 并且加载纹理的时候纹理环绕参数(GL11.GL_TEXTURE_WRAP_S  GL11.GL_TEXTURE_WRAP_T)是 GL11.GL_REPEAT(使用的库底层一定是这么做的) 
+而不是 GL12.GL_CLAMP_TO_EDGE 或者 GL13.GL_CLAMP_TO_BORDER 所以纹理会反复出现

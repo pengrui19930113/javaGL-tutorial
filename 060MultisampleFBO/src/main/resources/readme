@@ -1,0 +1,4 @@
+multisample FBO 多重采样离屏渲染 (需要使用到  colored renderbuffer attachment)
+
+多重采样FBO 的颜色附件只能是renderbuffer 不能是 texture 
+多重采样FBO 关键API 是GL30.glRenderbufferStorageMultisample
